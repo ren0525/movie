@@ -7,8 +7,8 @@ import pandas as pd
 df_list = []
 sep = ' '
 pages = range(11)
-movie_name = 'godzila'
-movie_index = '60579'
+movie_name = 'ultraman'
+movie_index = '85555'
 
 url = f'https://filmarks.com/movies/{movie_index}/'
 response = request.urlopen(url)
