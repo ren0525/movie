@@ -7,15 +7,8 @@ import pandas as pd
 df_list = []
 sep = ' '
 pages = range(11)
-movie_name = 'godzila'
-movie_index = '60579'
-
-url = f'https://filmarks.com/movies/{movie_index}/'
-response = request.urlopen(url)
-
-# ページのソースコードを取得
-soup = BeautifulSoup(response)
-response.close()
+movie_name = 'ultraman'
+movie_index = '85555'
 
 for page in pages:
     url = f'https://filmarks.com/movies/{movie_index}?page='+str(page)+''
