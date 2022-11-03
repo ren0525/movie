@@ -7,8 +7,8 @@ import pandas as pd
 df_list = []
 sep = ' '
 pages = range(11)
-movie_name = 'ultraman'
-movie_index = '85555'
+movie_name = 'godzila'
+movie_index = '60579'
 
 for page in pages:
     url = f'https://filmarks.com/movies/{movie_index}?page='+str(page)+''
