@@ -2,7 +2,7 @@ import pandas as pd
 import spacy
 import pandas as pd
 
-movie_name = 'ultraman'
+movie_name = 'godzila'
 
 # 使用する単語の品詞とストップワードの指定
 include_pos = ('NOUN', 'PROPN', 'VERB', 'ADJ')

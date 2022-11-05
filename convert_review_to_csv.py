@@ -6,12 +6,14 @@ import pandas as pd
 
 df_list = []
 sep = ' '
-pages = range(11)
+pages = range(100)
+limit_page = 1631
+s = 0
 movie_name = 'ultraman'
 movie_index = '85555'
 
 for page in pages:
-    url = f'https://filmarks.com/movies/{movie_index}?page='+str(page)+''
+    url = f'https://filmarks.com/movies/{movie_index}?page='+str(limit_page-s)+''
 
     response = request.urlopen(url)
     soup = BeautifulSoup(response)
@@ -35,8 +37,9 @@ for page in pages:
         df_list.append(_df)
         
     print("page%s is over"%page )
+    s += 1
 
-del df_list[0:10]
+# del df_list[0:10]
 
 # 一つのデータフレームにまとめる
 df_review = pd.concat(df_list).reset_index(drop=True)
