@@ -35,15 +35,28 @@ for review in df:
 		counter[date]['none'] += 1
 
 # 6. (5)のカウント情報をもとに，日別の感情成分を出力する
+daily_emotion_list = []
+date_list = []
+emotion_list = ['suki', 'iya', 'none', 'yorokobi', 'aware', 'takaburi', 'yasu', 'kowa', 'ikari', 'haji', 'odoroki']
+date_time = ''
 for date in sorted(counter):
+	date_time = date
+	date_list.append(date)
+	emotion_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 # 感情成分を頻度順に出力
 	for item in sorted(counter[date].items(), key=lambda x: x[1], reverse=True):
-		_df = pd.DataFrame({item[0]: [item[1]]}, index=[date])
-		df_list.append(_df)
+		if date_time == date or date_time == '':
+			index = emotion_list.index(item[0])
+			emotion_count[index] = item[1]
+			
+	daily_emotion_list.append(emotion_count)
+
+_df = pd.DataFrame(daily_emotion_list, index=pd.Index(data=date_list, name='Date'), columns=emotion_list)
+df_list.append(_df)		
+
 
 # 一つのデータフレームにまとめる
-df_review = pd.concat(df_list).reset_index(drop=True)
-print(df_review.shape)
-df_review.head()
-
-print(df_review)
+df_emotion = pd.concat(df_list)
+print(df_emotion.shape)
+df_emotion.head()
+df_emotion.to_excel(f'dataframe/filmarks_emotion_{movie_name}.xlsx')
