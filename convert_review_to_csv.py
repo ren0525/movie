@@ -1,19 +1,15 @@
 # Filmarksのスクレイピング
-# 対象映画は「」
 from bs4 import BeautifulSoup
 from urllib import request
 import pandas as pd
+import movie_info as mi
 
 df_list = []
 sep = ' '
-pages = range(100)
-limit_page = 1631
-s = 0
-movie_name = 'ultraman'
-movie_index = '85555'
+pages = range(101)
 
 for page in pages:
-    url = f'https://filmarks.com/movies/{movie_index}?page='+str(limit_page-s)+''
+    url = f'https://filmarks.com/movies/{mi.movie_index}?page='+str(page)+''
 
     response = request.urlopen(url)
     soup = BeautifulSoup(response)
@@ -37,9 +33,8 @@ for page in pages:
         df_list.append(_df)
         
     print("page%s is over"%page )
-    s += 1
 
-# del df_list[0:10]
+del df_list[0:10]
 
 # 一つのデータフレームにまとめる
 df_review = pd.concat(df_list).reset_index(drop=True)
@@ -53,4 +48,4 @@ df_review['score'].replace("-", 0 ,inplace=True)
 df_review['score'] = df_review['score'].astype(float)
 
 # スクレイピングしたデータフレームをcsv形式で保存
-df_review.to_csv(f'dataframe/filmarks_review_{movie_name}.csv', index=False, encoding='utf_8_sig')
+df_review.to_csv(f'dataframe/filmarks_review_{mi.movie_name}.csv', index=False, encoding='utf_8_sig')

@@ -1,8 +1,7 @@
 import pandas as pd
 import spacy
 import pandas as pd
-
-movie_name = 'godzila'
+import movie_info  as mi
 
 # 使用する単語の品詞とストップワードの指定
 include_pos = ('NOUN', 'PROPN', 'VERB', 'ADJ')
@@ -12,7 +11,7 @@ stopwords = ('する', 'ある', 'ない', 'いう', 'もの', 'こと', 'よう
              '回', '年', '点', '前', '後', '思う', '行く')
 
 # レビューデータの読み込み
-df = pd.read_csv(f'dataframe/filmarks_review_{movie_name}.csv', encoding='utf-8', usecols=[1,2]).values.tolist()
+df = pd.read_csv(f'dataframe/filmarks_review_{mi.movie_name}.csv', encoding='utf-8', usecols=[1,2]).values.tolist()
 df_review = []
 df_date = []
 for s in df:
@@ -20,6 +19,6 @@ for s in df:
     df_date.append(s[1])
 
 result = ' '.join(map(str, df_review))
-text_file = open(f'text/review_in_{movie_name}.txt', 'w')
+text_file = open(f'text/review_in_{mi.movie_name}.txt', 'w')
 text_file.write(result)
 text_file.close()

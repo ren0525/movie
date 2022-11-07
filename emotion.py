@@ -5,6 +5,7 @@ from mlask import MLAsk
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 import pandas as pd
+import movie_info as mi
 
 # pymlaskの準備
 emotion_analyzer = MLAsk()
@@ -15,8 +16,7 @@ counter = defaultdict(lambda: defaultdict(int))
 
 # 1. 標準入力でデータを読み込む
 df_list = []
-movie_name = 'godzila'
-df = pd.read_csv(f'dataframe/filmarks_review_{movie_name}.csv', encoding='utf-8', usecols=[1,2]).values.tolist()
+df = pd.read_csv(f'dataframe/filmarks_review_{mi.movie_name}.csv', encoding='utf-8', usecols=[1,2]).values.tolist()
 for review in df:
 	# 2. データからスレッドタイトルを取り出す
 	text = review[0]
@@ -59,4 +59,4 @@ df_list.append(_df)
 df_emotion = pd.concat(df_list)
 print(df_emotion.shape)
 df_emotion.head()
-df_emotion.to_excel(f'dataframe/filmarks_emotion_{movie_name}.xlsx')
+df_emotion.to_excel(f'dataframe/filmarks_emotion_{mi.movie_name}.xlsx')
