@@ -4,6 +4,7 @@ import re
 import pandas as pd
 import codecs
 from collections import Counter
+import MeCab
 
 class TfIdf:
     def __init__(self):
@@ -36,16 +37,19 @@ class TfIdf:
         Parameters:
             text : str         テキスト
         """
-        token = Tokenizer().tokenize(text)
-        words = []
-    
-        for line in token:
-            tkn = re.split('\t|,', str(line))
-            # 名詞のみ対象
-            if tkn[1] in ['名詞'] and tkn[2] in ['一般', '固有名詞']:
-                words.append(tkn[0])
-    
-        return ' ' . join(words)
+        word_list = []
+        m = MeCab.Tagger()
+        m1 = m.parse(text)
+
+        for row in m1.split("\n"):
+            word =row.split("\t")[0]#タブ区切りになっている１つ目を取り出す。ここには形態素が格納されている
+            if word == "EOS":
+                break
+            else:
+                pos = row.split("\t")[1].split(',')#タブ区切りになっている2つ目を取り出す。ここには品詞が格納されている
+                if ("名詞" in pos and '一般' in pos and '非自立' not in pos) or ("名詞" in pos and '固有名詞' in pos and '非自立' not in pos):
+                    word_list.append(word)
+        return ' '.join(word_list)
 
     def create_model(self,separating_docs):
         """
@@ -112,3 +116,11 @@ class TfIdf:
             data = Counter(value.split(' ')).most_common(cnt)
             res[key] = pd.DataFrame([v for k,v in data],columns=['Count'],index=[k for k,v in data])
         return res
+
+tf = TfIdf()
+tf.add_file('シンゴジラ','text/review_in_godzila.txt')
+tf.add_file('シンウルトラマン','text/review_in_ultraman.txt')
+tf.create()
+print(tf.top_words())
+print('----------------')
+print(tf.word_count())
