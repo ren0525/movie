@@ -40,7 +40,7 @@ class TfIdf:
         word_list = []
         m = MeCab.Tagger()
         m1 = m.parse(text)
-
+        print(text)
         for row in m1.split("\n"):
             word =row.split("\t")[0]#タブ区切りになっている１つ目を取り出す。ここには形態素が格納されている
             if word == "EOS":

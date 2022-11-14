@@ -9,46 +9,36 @@ import pandas as pd
 import movie_info as mi
 import re
 import demoji
-
-# Step2：それらをMeCabで形態素解析。名詞だけ抽出。
-def mplg(review):
-    word_list = ""
-    review = demoji.replace(string=review, repl="")
-    m=MeCab.Tagger()
-    m1=m.parse(review)
-    print(m1)
-    for row in m1.split("\n"):
-        word =row.split("\t")[0]#タブ区切りになっている１つ目を取り出す。ここには形態素が格納されている
-        if word == "EOS":
-            break
-        else:
-            pos = row.split("\t")[1]#タブ区切りになっている2つ目を取り出す。ここには品詞が格納されている
-            slice = pos[:2]
-            print(slice)
-            if slice == "名詞" and slice != '非自立' and slice != '代名詞' and slice != '接尾' and slice != '数':
-                word_list = word_list +" "+ word
-    print(word_list)
-    return word_list
-
-# Step3：名詞の出現頻度からTF-IDF/COS類似度を算出。テキスト情報のマッチ度を測る
-def tfidf(word_list):
-    docs = np.array(word_list)#Numpyの配列に変換する
-    #単語を配列ベクトル化して、TF-IDFを計算する
-    vecs = TfidfVectorizer(
-                token_pattern=u'(?u)\\b\\w+\\b'#文字列長が 1 の単語を処理対象に含めることを意味します。
-                ).fit_transform(docs)
-    vecs = vecs.toarray()
-    return vecs
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import TfidfTransformer
+from janome.tokenizer import Tokenizer
 
 
-def cossim(v1,v2):
-    return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+filenames=['text/review_in_godzila.txt','text/review_in_ultraman.txt','text/review_in_topgun.txt']
+wakati_list = []
+for filename in filenames: # テキストファイルを読み出しtextに代入 
+    with open(filename,mode='r',encoding = 'utf-8-sig') as f:
+        text = f.read()    
+    wakati = ''
+    t = Tokenizer() 
+    for token in t.tokenize(text):  # 形態素解析
+        hinshi = (token.part_of_speech).split(',')[0]  # 品詞情報
+        hinshi_2 = (token.part_of_speech).split(',')[1]
+        if hinshi in ['名詞']:  # 品詞が名詞の場合のみ以下実行
+            if not hinshi_2 in ['空白','*']:  
+            # 品詞情報の2項目目が空白か*の場合は以下実行しない
+                word = str(token).split()[0]  # 単語を取得
+                if not ',*,' in word:  # 単語に*が含まれない場合は以下実行
+                    wakati = wakati + word +' ' 
+                    # オブジェクトwakatiに単語とスペースを追加 
+    wakati_list.append(wakati) # 分かち書き結果をリストに追加
+wakati_list_np = np.array(wakati_list) # リストをndarrayに変換
+print(wakati_list_np)
 
-##実装
-word_list=[]
-text=open(f'text/review_in_{mi.movie_name}.txt', 'r', encoding='utf-8').read()
-word_list.append(mplg(text))
-
-vecs = tfidf(word_list)
-print(tfidf(word_list))
-print(cossim(vecs[0][2],vecs[0][0]))
+vectorizer = TfidfVectorizer(token_pattern=u'\\b\\w+\\b')
+transformer = TfidfTransformer()# transformerの生成。TF-IDFを使用
+tf = vectorizer.fit_transform(wakati_list_np) # ベクトル化
+tfidf = transformer.fit_transform(tf) # TF-IDF
+tfidf_array = tfidf.toarray()
+cs = cosine_similarity(tfidf_array,tfidf_array)  # cos類似度計算
+print(cs)
