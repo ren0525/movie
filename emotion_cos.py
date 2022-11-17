@@ -30,8 +30,12 @@ for i in emotion_count2:
 emo_np2 = np.array([emotion_count2])
 
 df_list = []
-movie_name = ['シンゴジラ', 'シンウルトラマン', 'トップガン']
-filenames=['dataframe/filmarks_review_godzila.csv','dataframe/filmarks_review_ultraman.csv','dataframe/filmarks_review_topgun.csv']
+movie_name = ['シンゴジラ', 'フォレストガンプ', 'トップガン', 'パラサイト', 'タイタニック',
+              'シンウルトラマン', 'ゴッドファーザー', 'ロッキー', 'マイフェアレディ', 'ウエストサイドストーリー',
+              'テリファー', 'レプリカズ', 'デイシフト', 'バーフバリ', 'スケートキッチン']
+filenames=['dataframe/popular/filmarks_review_godzilla.csv','dataframe/popular/filmarks_review_forrestgump.csv','dataframe/popular/filmarks_review_topgun.csv', 'dataframe/popular/filmarks_review_parasite.csv', 'dataframe/popular/filmarks_review_titanic.csv',
+            'dataframe/standard/filmarks_review_ultraman.csv', 'dataframe/standard/filmarks_review_godfather.csv', 'dataframe/standard/filmarks_review_rocky.csv', 'dataframe/standard/filmarks_review_myfairlady.csv', 'dataframe/standard/filmarks_review_westsidestory.csv',
+            'dataframe/unpopular/filmarks_review_terrifier.csv', 'dataframe/unpopular/filmarks_review_replicas.csv', 'dataframe/unpopular/filmarks_review_baahubali.csv', 'dataframe/unpopular/filmarks_review_dayshift.csv', 'dataframe/unpopular/filmarks_review_skatekitchen.csv']
 for filename in filenames:
     emotion_count1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     df = pd.read_csv(filename, encoding='utf-8', usecols=[1,2]).values.tolist()
@@ -54,6 +58,6 @@ for filename in filenames:
     #感情値のコサイン類似度を出力
     cs = cosine_similarity(emo_np1, emo_np2)
     df_list.append(cs[0])
-df = pd.DataFrame(df_list, index=[movie_name], columns=['ユーザが入力したテキスト'])
+df = pd.DataFrame(df_list, index=[movie_name], columns=['ユーザが入力したテキストとの相関係数'])
 print(df)
 
