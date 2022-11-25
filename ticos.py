@@ -9,7 +9,8 @@ from mlask import MLAsk
 import pandas as pd
 
 movie_name = ['シンゴジラ', 'フォレストガンプ', 'トップガン', 'パラサイト', 'タイタニック',
-              'シンウルトラマン', 'ゴッドファーザー', 'ロッキー', 'マイフェアレディ', 'ウエストサイドストーリー', 'テリファー', 'レプリカズ', 'デイシフト', 'バーフバリ', 'スケートキッチン', 'ユーザに入力されたテキスト']
+              'シンウルトラマン', 'ゴッドファーザー', 'ロッキー', 'マイフェアレディ', 'ウエストサイドストーリー',
+              'テリファー', 'レプリカズ', 'デイシフト', 'バーフバリ', 'スケートキッチン', 'ユーザに入力されたテキスト']
 filenames=['text/popular/review_in_godzilla.txt','text/popular/review_in_forrestgump.txt','text/popular/review_in_topgun.txt', 'text/popular/review_in_parasite.txt', 'text/popular/review_in_titanic.txt', 'text/review.txt',
             'text/standard/review_in_ultraman.txt', 'text/standard/review_in_godfather.txt', 'text/standard/review_in_rocky.txt', 'text/standard/review_in_myfairlady.txt', 'text/standard/review_in_westsidestory.txt',
             'text/unpopular/review_in_terrifier.txt', 'text/unpopular/review_in_replicas.txt', 'text/unpopular/review_in_baahubali.txt', 'text/unpopular/review_in_dayshift.txt', 'text/unpopular/review_in_skatekitchen.txt']

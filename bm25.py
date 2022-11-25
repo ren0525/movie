@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
-
 from gensim.summarization.bm25 import BM25
 from janome.tokenizer import Tokenizer
 import demoji
 import MeCab
-wakati_list = []
+import openpyxl
 
-movie_name = ['シンゴジラ', 'シンウルトラマン', 'トップガン', 'パラサイト']
-filenames = ['text/review_in_godzilla.txt','text/review_in_ultraman.txt', 'text/review_in_topgun.txt', 'text/review_in_parasite.txt']
+wakati_list = []
+movie_name = ['シンゴジラ', 'フォレストガンプ', 'トップガン', 'パラサイト', 'タイタニック',
+              'シンウルトラマン', 'ゴッドファーザー', 'ロッキー', 'マイフェアレディ', 'ウエストサイドストーリー',
+              'テリファー', 'レプリカズ', 'デイシフト', 'バーフバリ', 'スケートキッチン']
+file_name = ['text/popular/review_in_godzilla.txt','text/popular/review_in_forrestgump.txt','text/popular/review_in_topgun.txt', 'text/popular/review_in_parasite.txt', 'text/popular/review_in_titanic.txt', 'text/review.txt',
+            'text/standard/review_in_ultraman.txt', 'text/standard/review_in_godfather.txt', 'text/standard/review_in_rocky.txt', 'text/standard/review_in_myfairlady.txt', 'text/standard/review_in_westsidestory.txt',
+            'text/unpopular/review_in_terrifier.txt', 'text/unpopular/review_in_replicas.txt', 'text/unpopular/review_in_baahubali.txt', 'text/unpopular/review_in_dayshift.txt', 'text/unpopular/review_in_skatekitchen.txt']
+
 class best_match:
     def __init__(self):
         self.t = MeCab.Tagger()
@@ -32,44 +37,36 @@ class best_match:
                 break
             else:
                 pos = row.split("\t")[1].split(',')#タブ区切りになっている2つ目を取り出す。ここには品詞が格納されている
-                if ("名詞" in pos and '一般' in pos and '非自立' not in pos) or ("名詞" in pos and '固有名詞' in pos and '非自立' not in pos) or '形容詞' in pos:
+                if ("名詞" in pos and '一般' in pos and '非自立' not in pos) or ("名詞" in pos and '固有名詞' in pos and '非自立' not in pos) :
                     word_list.append(word) 
         return word_list
 
     #上位n件を抽出
-    def select_docs(self, num):
+    def select_docs(self):
         docs_dict = dict(zip(self.scores, movie_name))
         docs_dict = dict(sorted(docs_dict.items(), reverse = True))
-        print("\n・検索結果")
-        print(docs_dict.keys())
-        i = 0
-        for key, value in docs_dict.items():
-            print(round(key, 3), value[:100])
+        book = openpyxl.load_workbook('dataframe/movie_recommend_data_xlsx')
+        sheet = book['Sheet1']
+        sheet['C1'] = 'bm25'
+        i = 2
+        for n in range(len(movie_name)):
+            sheet[f'C{i}'] = self.scores[n]
             i += 1
-            if i == num: 
+            if i == len(movie_name) + 2:
+                book.save('dataframe/movie_recommend_data_xlsx') 
+                print('OK')
                 break
 
 if __name__ == "__main__":
-    query = 'ゴジラ、怖い、わくわくする'
+    query = 'ドキドキ、感動、楽しい、爆発、大迫力'
     docs = []
-    for filename in filenames:
+    for filename in file_name:
         with open(filename, 'r', encoding='utf-8') as f:
             text = demoji.replace(f.read(), repl='')
             docs.append(text)
-    while True:
-        try:
-            num = int(input("検索数を自然数で入力してください:"))
-            if num <= 0:
-                print("0より大きな数字を入力してください。")
-            elif num <= len(docs):
-                break
-            else:
-                print("文書数より多い数字が入力されています。")
-        except Exception:
-            print("数字以外のテキストが入力されています。")
 
     print("クエリ:", query)
     inst_BM = best_match()
     inst_BM.pre_process(docs)
     inst_BM.ranking(query)
-    inst_BM.select_docs(num)
+    inst_BM.select_docs()
