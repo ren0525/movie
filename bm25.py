@@ -26,6 +26,7 @@ class best_match:
     #クエリとの順位付け
     def ranking(self, query):
         wakachi_query = self.wakachi(query)
+        print(wakachi_query)
         self.scores = self.bm25_.get_scores(wakachi_query)
 
     #分かち書き
@@ -37,7 +38,7 @@ class best_match:
                 break
             else:
                 pos = row.split("\t")[1].split(',')#タブ区切りになっている2つ目を取り出す。ここには品詞が格納されている
-                if ("名詞" in pos and '一般' in pos and '非自立' not in pos) or ("名詞" in pos and '固有名詞' in pos and '非自立' not in pos) :
+                if ("名詞" in pos and '一般' in pos and '非自立' not in pos) or ("名詞" in pos and '固有名詞' in pos and '非自立' not in pos) or '形容詞' in pos:
                     word_list.append(word) 
         return word_list
 
@@ -45,20 +46,27 @@ class best_match:
     def select_docs(self):
         docs_dict = dict(zip(self.scores, movie_name))
         docs_dict = dict(sorted(docs_dict.items(), reverse = True))
-        book = openpyxl.load_workbook('dataframe/movie_recommend_data_xlsx')
-        sheet = book['Sheet1']
-        sheet['C1'] = 'bm25'
-        i = 2
-        for n in range(len(movie_name)):
-            sheet[f'C{i}'] = self.scores[n]
+        print("\n・検索結果")
+        i = 0
+        for key, value in docs_dict.items():
+            print(round(key, 3), value)
             i += 1
-            if i == len(movie_name) + 2:
-                book.save('dataframe/movie_recommend_data_xlsx') 
-                print('OK')
+            if i == len(movie_name):
                 break
+        # book = openpyxl.load_workbook('dataframe/movie_recommend_data_xlsx')
+        # sheet = book['Sheet1']
+        # sheet['C1'] = 'bm25'
+        # i = 2
+        # for n in range(len(movie_name)):
+        #     sheet[f'C{i}'] = self.scores[n]
+        #     i += 1
+        #     if i == len(movie_name) + 2:
+        #         # book.save('dataframe/movie_recommend_data_xlsx') 
+        #         print('OK')
+                # break
 
 if __name__ == "__main__":
-    query = 'ドキドキ、感動、楽しい、爆発、大迫力'
+    query = '寂しい　感動　楽しい　爆発　迫力'
     docs = []
     for filename in file_name:
         with open(filename, 'r', encoding='utf-8') as f:

@@ -60,4 +60,5 @@ for filename in file_name:
     cs = cosine_similarity(emo_np1, emo_np2)
     df_list.append(cs[0])
 df = pd.DataFrame(df_list, index=movie_name, columns=['emotion_cos'])
-df.to_excel('dataframe/movie_recommend_data.xlsx', index=movie_name, columns=['emotion_cos'])
+print(df)
+# df.to_excel('dataframe/movie_recommend_data.xlsx', index=movie_name, columns=['emotion_cos'])

@@ -42,5 +42,5 @@ tfidf = transformer.fit_transform(tf) # TF-IDF
 tfidf_array = tfidf.toarray()
 cos = cosine_similarity(tfidf_array,tfidf_array)  # cos類似度計算
 df_cos = pd.DataFrame(cos, index=movie_name, columns=movie_name)
-df_cos.to_excel('dataframe/filmarks_review_cos.xlsx', index=movie_name, columns=movie_name)
+# df_cos.to_excel('dataframe/filmarks_review_cos.xlsx', index=movie_name, columns=movie_name)
 
