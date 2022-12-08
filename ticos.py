@@ -32,6 +32,7 @@ for filename in filenames: # テキストファイルを読み出しtextに代�
                 word_list = word_list + ' ' + word 
     wakati_list.append(word_list)
 wakati_list_np = np.array(wakati_list) # リストをndarrayに変換
+print(wakati_list)
 
 # vectorizerの生成。token_pattern=u'\\b\\w+\\b'で1文字の語を含む設定
 vectorizer = CountVectorizer(token_pattern=u'\\b\\w+\\b')
@@ -43,4 +44,3 @@ tfidf_array = tfidf.toarray()
 cos = cosine_similarity(tfidf_array,tfidf_array)  # cos類似度計算
 df_cos = pd.DataFrame(cos, index=movie_name, columns=movie_name)
 # df_cos.to_excel('dataframe/filmarks_review_cos.xlsx', index=movie_name, columns=movie_name)
-

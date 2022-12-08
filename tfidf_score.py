@@ -61,4 +61,5 @@ while l < 15:
     score_list = [] 
     l += 1
 
+print(rating_matrix_item)
 print(np.round(adjustment_cosine_similarity, decimals=3))
